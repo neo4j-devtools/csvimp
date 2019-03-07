@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
+import { Provider } from 'react-redux'
 import styled from 'styled-components'
 import fontAscii from 'font-ascii';
+
+import rootReducer from './state/root'
 
 const logo = `
 ██████╗███████╗██╗   ██╗██╗███╗   ███╗██████╗ 
@@ -71,6 +75,9 @@ const fonts = [
 ]
 //fonts.map(f => <div><p id={f} >{fontAscii('CSVimp', { typeface: f })}</p><p>TEXT: {f}</p></div>)
 
+const store = createStore(rootReducer)
+
+
 const StyledRoot = styled.div`
   position: absolute;
   left: 0;
@@ -90,15 +97,16 @@ const StyledLogo = styled.p`
   margin: 0;
 `
 
-
 class App extends Component {
   render() {
     return (
-      <StyledRoot>
-        <StyledLogo>{logo}</StyledLogo>
+      <Provider store={store}>
+        <StyledRoot>
+          <StyledLogo>{logo}</StyledLogo>
 
 
-      </StyledRoot>
+        </StyledRoot>
+      </Provider>
     );
   }
 }
