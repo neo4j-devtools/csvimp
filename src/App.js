@@ -7,6 +7,7 @@ import fontAscii from 'font-ascii';
 import rootReducer from './state/root'
 
 import Table from './table/Base'
+import Controls from './controls/Base'
 
 const logo = `
 ██████╗███████╗██╗   ██╗██╗███╗   ███╗██████╗ 
@@ -90,6 +91,8 @@ const StyledRoot = styled.div`
   display: flex;
   flex-direction: column;
   padding: 1em;
+
+  font-family: Open Sans,Helvetica Neue,Arial,Helvetica,sans-serif;
 `
 
 const StyledLogo = styled.p`
@@ -108,6 +111,8 @@ class App extends Component {
           <StyledLogo>{logo}</StyledLogo>
 
           <Table/>
+
+          <Controls/>
 
         </StyledRoot>
       </Provider>
