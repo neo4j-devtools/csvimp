@@ -97,6 +97,7 @@ const StyledLogo = styled.p`
   font-family: "Courier New", Monospace;
   white-space: pre;
   margin: 0;
+  margin-bottom: 1em;
 `
 
 class App extends Component {
