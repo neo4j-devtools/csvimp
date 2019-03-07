@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import fontAscii from 'font-ascii';
 
 import rootReducer from './state/root'
+import previewMiddleware from './state/previewmw'
 
 import Table from './table/Base'
 import Controls from './controls/Base'
@@ -78,8 +79,10 @@ const fonts = [
 ]
 //fonts.map(f => <div><p id={f} >{fontAscii('CSVimp', { typeface: f })}</p><p>TEXT: {f}</p></div>)
 
-const store = createStore(rootReducer)
-
+const store = createStore(
+  rootReducer,
+  compose(applyMiddleware(previewMiddleware))
+)
 
 const StyledRoot = styled.div`
   position: absolute;

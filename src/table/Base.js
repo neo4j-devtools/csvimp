@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
+import Papa from 'papaparse'
 
 import {
-  getFile,
+  getFileName,
   setCsvFile
-} from '../state/app'
+} from '../state/file'
 import LoadButton from './LoadButton'
 
 class Base extends Component {
   onLoad = (file) => {
     console.log('loading file', file)
+    this.props.setCsvFile(file)
   }
 
   render() {
@@ -24,7 +26,7 @@ class Base extends Component {
 }
 
 const mapStateToProps = state => ({
-  csvfile: getFile(state)
+  csvfile: getFileName(state)
 })
 
 const mapDispatchToProps = dispatch => ({

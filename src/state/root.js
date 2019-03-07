@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
 
-import appReducer, { NAME as app } from './app'
+import fileReducer, { NAME as file } from './file'
 
 const reducers = {
-  [app]: appReducer
+  [file]: fileReducer
 }
 
 export default combineReducers(reducers)
