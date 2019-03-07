@@ -1,33 +1,31 @@
 export const NAME = 'app'
-export const SET_ACTIVE = 'connections/SET_ACTIVE'
-export const SET_INACTIVE = 'connections/SET_INACTIVE'
-export const SET_ATTEMPTING_CONNECTION = 'connections/SET_ATTEMPTING_CONNECTION'
-export const SET_USER_HAS_WRITE_PERMISSIONS = 'connections/SET_USER_HAS_WRITE_PERMISSIONS'
-export const SET_AVAILABLE_ROLES = 'connections/SET_AVAILABLE_ROLES'
-export const SET_USER_ROLES = 'connections/SET_USER_ROLES'
-export const SET_STORE_ID = 'connections/SET_STORE_ID'
-export const UPDATE_CONNECTION_DETAILS = 'connections/UPDATE_CONNECTION_DETAILS'
-export const SET_DISCOVERED_ADDRESS = 'connections/SET_DISCOVERED_ADDRESS'
+export const SET_FILE = NAME + '/SET_FILE'
 
 export const initialState = {
-  activeConnection: null,
-  discoveredAddress: null
+  csvfile: null
 }
 
 /**
  * Selectors
  */
-export function getConnectionState (state) {
-  return state[NAME].connectionState || initialState.connectionState
+export function getFile (state) {
+  return state[NAME].csvfile
 }
 
 /**
  * Reducer
  */
 export default function (state = initialState, action = {}) {
+  const {
+    filename
+  } = action
+
   switch (action.type) {
-    case SET_ACTIVE:
-      return { ...state, activeConnection: 'ASDF' }
+    case SET_FILE:
+      return {
+        ...state,
+        filename
+      }
     default:
       return state
   }
@@ -36,9 +34,10 @@ export default function (state = initialState, action = {}) {
 /**
  * Actions
  */
-export const setActiveConnection = () => {
+export const setCsvFile = filename => {
   return {
-    type: SET_ACTIVE
+    type: SET_FILE,
+    filename
   }
 }
 

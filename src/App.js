@@ -6,6 +6,8 @@ import fontAscii from 'font-ascii';
 
 import rootReducer from './state/root'
 
+import Table from './table/Base'
+
 const logo = `
 ██████╗███████╗██╗   ██╗██╗███╗   ███╗██████╗ 
 ██╔════╝██╔════╝██║   ██║██║████╗ ████║██╔══██╗
@@ -104,6 +106,7 @@ class App extends Component {
         <StyledRoot>
           <StyledLogo>{logo}</StyledLogo>
 
+          <Table/>
 
         </StyledRoot>
       </Provider>
