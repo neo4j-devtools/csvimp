@@ -42,6 +42,7 @@
     "postcss-loader": "3.0.0",
     "postcss-preset-env": "6.5.0",
     "postcss-safe-parser": "4.0.1",
+    "rc-switch": "^1.9.0",
     "react": "^16.8.4",
     "react-app-polyfill": "^0.2.2",
     "react-atv-parallax": "1.0.0",

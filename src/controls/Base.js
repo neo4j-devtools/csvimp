@@ -1,14 +1,26 @@
 import React from 'react'
 import styled from 'styled-components'
+import { connect } from 'react-redux'
+
+import {
+  getHeaders,
+  setHeaders
+} from '../state/file'
 
 import LoadButton from './LoadButton'
+import Checkbox from './Checkbox'
 
-const StyledDiv = styled.div`
+const StyledRoot = styled.div`
   margin-top: 1em;
 
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
+`
+
+const StyledButtonList = styled.div`
+  display: flex;
+  flex-direction: column;
 `
 
 /*
@@ -24,9 +36,28 @@ const StyledDiv = styled.div`
     />
 
     */
-const Base = ({ onLoad }) =>
-  <StyledDiv>
+const Base = ({
+  onLoad,
+  useHeaders,
+  setUseHeaders
+}) =>
+  <StyledRoot>
+    <StyledButtonList>
+      <Checkbox 
+        value={useHeaders}
+        onChange={setUseHeaders}
+        label='CSV file has headers'
+      />
+    </StyledButtonList>
     <LoadButton />
-  </StyledDiv>
+  </StyledRoot>
 
-export default Base
+const mapStateToProps = state => ({
+  useHeaders: getHeaders(state)
+})
+
+const mapDispatchToProps = dispatch => ({
+  setUseHeaders: value => dispatch(setHeaders(value))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Base)

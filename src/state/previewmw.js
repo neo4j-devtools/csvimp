@@ -9,6 +9,10 @@ import {
 } from './file';
 
 const reloadPreview = (file, hasHeaders, dispatch) => {
+  if (file === null) {
+    return
+  }
+
   console.log('reloadPreview', file)
   Papa.parse(file, {
     preview: hasHeaders ? 6 : 5,

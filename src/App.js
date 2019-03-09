@@ -96,6 +96,7 @@ const StyledRoot = styled.div`
   padding: 1em;
 
   font-family: Open Sans,Helvetica Neue,Arial,Helvetica,sans-serif;
+  user-select: none;
 `
 
 const StyledLogo = styled.p`
