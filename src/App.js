@@ -90,7 +90,7 @@ const StyledRoot = styled.div`
   right: 0;
   top: 0;
   bottom: 0;
-  background-color: #cdcdcd;
+  background-color: #dddddd;
   display: flex;
   flex-direction: column;
   padding: 1em;
