@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
-import Papa from 'papaparse'
 
 import {
   getFileName,
-  setCsvFile
+  setCsvFile,
+  getPreview
 } from '../state/file'
 import LoadButton from './LoadButton'
+import Preview from './Preview'
 
 class Base extends Component {
   onLoad = (file) => {
@@ -16,17 +16,18 @@ class Base extends Component {
   }
 
   render() {
-    const { csvfile } = this.props
-    if (csvfile === null) {
+    const { csvfile, previewData } = this.props
+    if (previewData === null) {
       return <LoadButton onLoad={this.onLoad} />
     } else {
-      return <p>{csvfile}</p>
+      return <Preview data={previewData} />
     }
   }
 }
 
 const mapStateToProps = state => ({
-  csvfile: getFileName(state)
+  csvfile: getFileName(state),
+  previewData: getPreview(state)
 })
 
 const mapDispatchToProps = dispatch => ({

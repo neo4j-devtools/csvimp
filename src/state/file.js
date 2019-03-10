@@ -24,6 +24,10 @@ export function getHeaders (state) {
   return state[NAME].hasHeaders
 }
 
+export function getPreview (state) {
+  return state[NAME].preview
+}
+
 /**
  * Reducer
  */
