@@ -8,15 +8,11 @@ import Column from './Column'
 const StyledRoot = styled.div`
   display: flex;
   flex-direction: row;
+  box-shadow: 0 2px 15px 0 rgba(0,0,0,0.15);
 `
 
-const StyledItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5em;
-  background: gray;
-  opacity: ${props => props.isDragging ? 0.7 : 1};
+const StyledDragDrop = styled(DragDropContext)`
+  box-shadow: 0 2px 15px 0 rgba(0,0,0,0.15);
 `
 
 const onDragEnd = reorder => result => {
@@ -53,14 +49,13 @@ const Preview = ({
             {columns.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
                 {(provided, snapshot) => (
-                  <StyledItem
+                  <Column
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     isDragging={snapshot.isDragging}
-                  >
-                    {item.content}
-                  </StyledItem>
+                    data={item.content}
+                  />
                 )}
               </Draggable>
             ))}
