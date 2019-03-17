@@ -6,9 +6,13 @@ import {
   SET_FILE,
   SET_HEADERS,
   setPreview
-} from './file';
+} from './file'
 
-const reloadPreview = (file, hasHeaders, dispatch) => {
+import {
+  reset
+} from './editor'
+
+const reloadPreview = (file, hasHeaders, dispatch, resetEditor) => {
   if (file === null) {
     return
   }
@@ -35,6 +39,9 @@ const reloadPreview = (file, hasHeaders, dispatch) => {
 
       console.log('setting preview', data)
       dispatch(setPreview(data))
+      if (resetEditor) {
+        dispatch(reset(data[0].length))
+      }
     }
   })
 }
@@ -43,11 +50,11 @@ export default function previewMiddleware ({ getState, dispatch }) {
   return next => action => {
 
     if (action.type === SET_FILE) {
-      reloadPreview(action.file, getHeaders(getState()), dispatch)
+      reloadPreview(action.file, getHeaders(getState()), dispatch, true)
     }
 
     if (action.type === SET_HEADERS) {
-      reloadPreview(getFile(getState()), action.hasHeaders, dispatch)
+      reloadPreview(getFile(getState()), action.hasHeaders, dispatch, false)
     }
 
     return next(action)
