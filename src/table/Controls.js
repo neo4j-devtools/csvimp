@@ -44,11 +44,18 @@ class Controls extends React.Component {
   }
 
   addNode = (from, to) => () => {
+    const { nodes } = this.state
+    let newNodes = nodes.slice()
+    for (let i = 0; i <= nodes.length; i++) {
+      const start = i === 0 ? 0 : nodes[i - 1].to
+      const end = i === nodes.length ? numColumns : nodes[i].from
+      if (from >= start && to <= end) {
+        newNodes.splice(i, 0, { from, to })
+      }
+    }
+
     this.setState({
-      nodes: [
-        ...this.state.nodes,
-        { from, to }
-      ]
+      nodes: newNodes
     })
   }
 
@@ -66,8 +73,10 @@ class Controls extends React.Component {
     let content = []
 
     if (loaded) {
+      console.log('RENDER')
       let prevLast = 0
       nodes.forEach((n, i) => {
+        console.log(prevLast, n.from, n.to)
         if (n.from > prevLast) {
           content.push(
             <Plus
