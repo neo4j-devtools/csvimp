@@ -8,8 +8,8 @@ import Column from './Column'
 const StyledRoot = styled.div`
   display: flex;
   flex-direction: row;
-  box-shadow: 0 2px 15px 0 rgba(0,0,0,0.15);
 `
+// box-shadow: 0 2px 15px 0 rgba(0,0,0,0.15);
 
 const StyledDragDrop = styled(DragDropContext)`
   box-shadow: 0 2px 15px 0 rgba(0,0,0,0.15);
