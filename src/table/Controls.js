@@ -4,6 +4,7 @@ import  getResizeDetector from 'element-resize-detector'
 
 import Plus from './Plus'
 import Node from './Node'
+import Relationship from './Relationship'
 
 const Root = styled.div`
   flex: 1;
@@ -79,6 +80,19 @@ class Controls extends React.Component {
             onUpdate={this.onNodeUpdate(i)}
           />
         )
+
+        if (i > 0) {
+          content.push(
+            <Relationship
+              from={(nodes[i - 1].from + nodes[i - 1].to) / 2}
+              to={(nodes[i].from + nodes[i].to) / 2}
+              rootWidth={width}
+              rootHeight={height}
+              numColumns={numColumns}
+              key={`rel-${i}`}
+            />
+          )
+        }
 
         prevLast = n.to
       })

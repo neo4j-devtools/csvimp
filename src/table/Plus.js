@@ -37,7 +37,9 @@ class Plus extends React.Component {
 
     const cw = rootWidth / numColumns
     const cx = (from + to)*cw / 2
-    const cy = rootHeight / 2
+    const cy = from === 0 || to === numColumns
+      ? rootHeight / 2
+      : rootHeight / 4
 
     return (
       <React.Fragment>
