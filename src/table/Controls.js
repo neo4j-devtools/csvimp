@@ -19,8 +19,7 @@ class Controls extends React.Component {
 
   state = {
     rootElement: null,
-    loaded: false,
-    nodes: []
+    loaded: false
   }
 
   onRootElement = element => {
@@ -44,6 +43,10 @@ class Controls extends React.Component {
   }
 
   addNode = (from, to) => () => {
+    const { addNode } = this.props
+    addNode(from, to)
+
+    /*
     const { nodes } = this.state
     let newNodes = nodes.slice()
     for (let i = 0; i <= nodes.length; i++) {
@@ -57,26 +60,29 @@ class Controls extends React.Component {
     this.setState({
       nodes: newNodes
     })
+    */
   }
 
   onNodeUpdate = (data, nodeIndex) => {
+    this.props.updateNode(nodeIndex, data)
+    /*
     this.setState({
       nodes: this.state.nodes.map((n, i) => i === nodeIndex
         ? { ...n, ...data }
         : n
       )
     })
+    */
   }
 
   render() {
-    const { loaded, width, height, nodes } = this.state
+    const { loaded, width, height } = this.state
+    const { nodes } = this.props
     let content = []
 
     if (loaded) {
-      console.log('RENDER')
       let prevLast = 0
       nodes.forEach((n, i) => {
-        console.log(prevLast, n.from, n.to)
         if (n.from > prevLast) {
           content.push(
             <Plus

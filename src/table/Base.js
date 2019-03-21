@@ -9,7 +9,10 @@ import {
 } from '../state/file'
 import {
   getOrder,
-  reorder
+  reorder,
+  addNode,
+  updateNode,
+  getNodes
 } from '../state/editor'
 
 import LoadButton from './LoadButton'
@@ -29,7 +32,7 @@ class Base extends Component {
   }
 
   render() {
-    const { csvfile, previewData, order, reorder } = this.props
+    const { csvfile, previewData, order, reorder, nodes, addNode, updateNode } = this.props
     if (previewData === null) {
       return <LoadButton onLoad={this.onLoad} />
     } else {
@@ -40,7 +43,11 @@ class Base extends Component {
             order={order}
             reorder={reorder}  
           />
-          <Controls />
+          <Controls
+            nodes={nodes}
+            addNode={addNode}
+            updateNode={updateNode}
+          />
         </MainUi>
       )
     }
@@ -50,12 +57,15 @@ class Base extends Component {
 const mapStateToProps = state => ({
   csvfile: getFileName(state),
   previewData: getPreview(state),
-  order: getOrder(state)
+  order: getOrder(state),
+  nodes: getNodes(state)
 })
 
 const mapDispatchToProps = dispatch => ({
   setCsvFile: file => dispatch(setCsvFile(file)),
-  reorder: (from, to) => dispatch(reorder(from, to))
+  reorder: (from, to) => dispatch(reorder(from, to)),
+  addNode: (from, to) => dispatch(addNode(from, to)),
+  updateNode: (index, data) => dispatch(updateNode(index, data))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Base)
