@@ -43,12 +43,21 @@ class Controls extends React.Component {
     }
   }
 
-  addNode = (from, to) => {
+  addNode = (from, to) => () => {
     this.setState({
       nodes: [
         ...this.state.nodes,
         { from, to }
       ]
+    })
+  }
+
+  onNodeUpdate = (data, nodeIndex) => {
+    this.setState({
+      nodes: this.state.nodes.map((n, i) => i === nodeIndex
+        ? { ...n, ...data }
+        : n
+      )
     })
   }
 
@@ -62,7 +71,7 @@ class Controls extends React.Component {
         if (n.from > prevLast) {
           content.push(
             <Plus
-              onClick={() => this.addNode(prevLast, n.from)}
+              onClick={this.addNode(prevLast, n.from)}
               from={prevLast}
               to={n.from}
               rootWidth={width}
@@ -81,6 +90,7 @@ class Controls extends React.Component {
             rootHeight={height}
             numColumns={numColumns}
             key={`node-${i}`}
+            onUpdate={data => this.onNodeUpdate(data, i)}
           />
         )
 
@@ -91,7 +101,7 @@ class Controls extends React.Component {
       if (lastPos < numColumns) {
         content.push(
           <Plus
-            onClick={() => this.addNode(lastPos, numColumns)}
+            onClick={this.addNode(lastPos, numColumns)}
             from={lastPos}
             to={numColumns}
             rootWidth={width}
@@ -103,7 +113,6 @@ class Controls extends React.Component {
       }
     }
 
-    console.log(width, height)
     return <Root ref={this.onRootElement}>
       <SvgRoot width={width} height={height}>
         {content}
