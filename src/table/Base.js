@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
 
 import {
   getFileName,
@@ -13,6 +14,13 @@ import {
 
 import LoadButton from './LoadButton'
 import Preview from './Preview'
+import Controls from './Controls'
+
+const MainUi = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`
 
 class Base extends Component {
   onLoad = (file) => {
@@ -25,11 +33,16 @@ class Base extends Component {
     if (previewData === null) {
       return <LoadButton onLoad={this.onLoad} />
     } else {
-      return <Preview
-        data={previewData}
-        order={order}
-        reorder={reorder}  
-      />
+      return (
+        <MainUi>
+          <Preview
+            data={previewData}
+            order={order}
+            reorder={reorder}  
+          />
+          <Controls />
+        </MainUi>
+      )
     }
   }
 }
