@@ -42,38 +42,9 @@ class Controls extends React.Component {
     }
   }
 
-  addNode = (from, to) => () => {
-    const { addNode } = this.props
-    addNode(from, to)
+  addNode = (from, to) => () => this.props.addNode(from, to)
 
-    /*
-    const { nodes } = this.state
-    let newNodes = nodes.slice()
-    for (let i = 0; i <= nodes.length; i++) {
-      const start = i === 0 ? 0 : nodes[i - 1].to
-      const end = i === nodes.length ? numColumns : nodes[i].from
-      if (from >= start && to <= end) {
-        newNodes.splice(i, 0, { from, to })
-      }
-    }
-
-    this.setState({
-      nodes: newNodes
-    })
-    */
-  }
-
-  onNodeUpdate = (data, nodeIndex) => {
-    this.props.updateNode(nodeIndex, data)
-    /*
-    this.setState({
-      nodes: this.state.nodes.map((n, i) => i === nodeIndex
-        ? { ...n, ...data }
-        : n
-      )
-    })
-    */
-  }
+  onNodeUpdate = nodeIndex => data => this.props.updateNode(nodeIndex, data)
 
   render() {
     const { loaded, width, height } = this.state
@@ -105,7 +76,7 @@ class Controls extends React.Component {
             rootHeight={height}
             numColumns={numColumns}
             key={`node-${i}`}
-            onUpdate={data => this.onNodeUpdate(data, i)}
+            onUpdate={this.onNodeUpdate(i)}
           />
         )
 
