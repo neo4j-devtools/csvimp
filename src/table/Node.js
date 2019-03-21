@@ -20,11 +20,6 @@ const Bracket = styled.path`
 
 class Node extends React.Component {
 
-  state = {
-    dragFrom: null,
-    dragTo: null
-  }
-
   makePath = (x1, y1, x2, y2) => {
     const bx1 = (x1 + x2 - Size) / 2
     const bx2 = (x1 + x2 + Size) / 2
@@ -40,13 +35,9 @@ class Node extends React.Component {
 
   render () {
     const { from, to, rootWidth, rootHeight, numColumns, onUpdate } = this.props
-    const { dragFrom, dragTo } = this.state
-
-    const curFrom = dragFrom !== null ? dragFrom : from
-    const curTo = dragTo !== null ? dragTo : to
 
     const cw = rootWidth / numColumns
-    const x = (curFrom + curTo)*cw / 2
+    const x = (from + to)*cw / 2
     const y = rootHeight / 2
 
     return (
@@ -61,28 +52,17 @@ class Node extends React.Component {
       		</pattern>  
         </defs>
 
-        <Bracket d={this.makePath(curFrom * cw, 0, curTo * cw, rootHeight / 2)} />
+        <Bracket d={this.makePath(from * cw, 0, to * cw, rootHeight / 2)} />
 
         <Handle
           x={from*cw}
           y={0}
           onDragging={dx => {
-            const current = dragFrom === null ? from : dragFrom
             const newFrom = Math.round(dx / cw)
-            if (newFrom !== current && newFrom < to) {
-              this.setState({
-                dragFrom: newFrom
-              })
-            }
-          }}
-          onDragged={dx => {
-            if (dragFrom !== null) {
+            if (newFrom !== from && newFrom < to) {
               onUpdate({
-                from: dragFrom,
+                from: newFrom,
                 to
-              })
-              this.setState({
-                dragFrom: null
               })
             }
           }}
@@ -92,22 +72,11 @@ class Node extends React.Component {
           x={to*cw - HandleW}
           y={0}
           onDragging={dx => {
-            const current = dragTo === null ? to : dragTo
             const newTo = Math.round(dx / cw)
-            if (newTo !== current && newTo > from) {
-              this.setState({
-                dragTo: newTo
-              })
-            }
-          }}
-          onDragged={dx => {
-            if (dragTo !== null) {
+            if (newTo !== to && newTo > from) {
               onUpdate({
                 from,
-                to: dragTo
-              })
-              this.setState({
-                dragTo: null
+                to: newTo
               })
             }
           }}

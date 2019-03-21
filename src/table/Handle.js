@@ -48,14 +48,12 @@ class Handle extends React.Component {
 
   onUp = evt => {
     const { dragging } = this.state
-    const { onDragged } = this.props
 
     if (dragging) {
       evt.target.releasePointerCapture(evt.pointerId)
       this.setState({
         dragging: false
       })
-      onDragged(this.state.dragX)
     }
   }
 
