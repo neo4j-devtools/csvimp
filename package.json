@@ -52,6 +52,7 @@
     "react-dnd": "^7.3.0",
     "react-dom": "^16.8.4",
     "react-dropzone": "^10.0.0",
+    "react-particle-effect-button": "^1.0.1",
     "react-redux": "^6.0.1",
     "react-reorder": "^3.0.0-alpha.7",
     "redux": "^4.0.1",

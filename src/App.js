@@ -36,6 +36,8 @@ const StyledRoot = styled.div`
 
   font-family: Open Sans,Helvetica Neue,Arial,Helvetica,sans-serif;
   user-select: none;
+
+  overflow: hidden;
 `
 
 const StyledLogo = styled.p`
