@@ -8,6 +8,7 @@ import previewMiddleware from './state/previewmw'
 
 import Table from './table/Base'
 import Controls from './controls/Base'
+import Popup from './popup/Popup'
 
 const Logo = `
 ██████╗███████╗██╗   ██╗██╗███╗   ███╗██████╗ 
@@ -58,6 +59,8 @@ class App extends Component {
           <Table/>
 
           <Controls/>
+
+          <Popup />
 
         </StyledRoot>
       </Provider>

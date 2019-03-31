@@ -9,6 +9,7 @@ import {
 
 import LoadButton from './LoadButton'
 import Checkbox from './Checkbox'
+import { showPopup } from '../state/popup'
 
 const StyledRoot = styled.div`
   margin-top: 1em;
@@ -37,9 +38,9 @@ const StyledButtonList = styled.div`
 
     */
 const Base = ({
-  onLoad,
   useHeaders,
-  setUseHeaders
+  setUseHeaders,
+  showPopup
 }) =>
   <StyledRoot>
     <StyledButtonList>
@@ -49,7 +50,9 @@ const Base = ({
         label='CSV file has headers'
       />
     </StyledButtonList>
-    <LoadButton />
+    <LoadButton
+      onLoad={showPopup}
+    />
   </StyledRoot>
 
 const mapStateToProps = state => ({
@@ -57,7 +60,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  setUseHeaders: value => dispatch(setHeaders(value))
+  setUseHeaders: value => dispatch(setHeaders(value)),
+  showPopup: () => dispatch(showPopup())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Base)
