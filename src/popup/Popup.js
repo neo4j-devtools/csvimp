@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
+import ProgressBar from 'react-progress-bar-battlenet-style'
+import { AwesomeButton } from 'react-awesome-button'
+import 'react-awesome-button/dist/styles.css'
+
 import {
   getVisible
 } from '../state/popup'
@@ -12,6 +16,9 @@ import {
   updateNode,
   getNodes
 } from '../state/editor'
+import {
+  getFileName
+} from '../state/file'
 
 const Base = styled.div`
   position: absolute;
@@ -41,25 +48,82 @@ const Overlay = styled.div`
   right: 0;
 
   background: black;
-  opacity: 0.4;
+  opacity: ${props => props.visible ? 0.4 : 0};
+  transition: opacity ease-in-out 0.3s;
+`
+
+const Stats = styled.div`
+  margin-top: 1em;
+  margin-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+`
+
+const Buttons = styled.div`
+  margin-top: 1em;
+  display: flex;
+  flex-direction: row;
+  align-self: stretch;
+  justify-content: flex-end;
 `
 
 const Content = styled.div`
-  background: white;
-  width: 300px;
-  height: 200px;
+  display: flex;
+  flex-direction: column;
+
+  background: #dddddd;
+  padding: 1em;
+  border-radius: 1em;
+  min-width: 50%;
+
+  box-shadow: 0 20px 50px 0 rgba(0,0,0,0.50);
+`
+//box-shadow: 20px 25px 75px 5px rgba(0,0,0,0.3);
+//box-shadow: 0 20px 50px 0 rgba(0,0,0,0.50);
+const Title = styled.span`
+  font-weight: bold;
+  font-size: 1.5em;
+`
+
+const Text = styled.span`
+`
+
+const Button = styled(AwesomeButton)`
+  --button-primary-color: #e48624 !important;
+  --button-primary-color-dark: #a46313 !important;
+  --button-primary-color-hover: #ffae59 !important;
+  --button-primary-color-active: #ffae59 !important;
+`
+
+const LoadButton = styled(Button)`
+  margin-left: 1em !important;
 `
 
 class Popup extends Component {
 
   render() {
-    const { isVisible } = this.props
+    const { isVisible, filename, progress = 30 } = this.props
 
     return isVisible 
       ? <Base>
-          <Overlay />
+          <Overlay visible={isVisible} />
           <ContentRoot>
-            <Content />
+            <Content>
+              <Title>Load file</Title>
+
+              <Stats>
+                <Text>Database: online</Text>
+                <Text>{`File: ${filename}`}</Text>
+                <Text>Size: 35Mb / 500 lines</Text>
+              </Stats>
+
+              <ProgressBar completed={progress} />
+
+              <Buttons>
+                <Button disabled >Stop</Button>
+                <LoadButton type='primary' >Load</LoadButton>
+              </Buttons>
+            </Content>
           </ContentRoot>
         </Base>
       : null 
@@ -67,7 +131,8 @@ class Popup extends Component {
 }
 
 const mapStateToProps = state => ({
-  isVisible: getVisible(state)
+  isVisible: getVisible(state),
+  filename: getFileName(state)
 })
 
 const mapDispatchToProps = dispatch => ({
