@@ -1,0 +1,9 @@
+config
+node_modules
+public
+scripts
+.gitignore
+.npmignore
+package-lock.json
+src
+*.tgz

@@ -2,6 +2,18 @@
   "name": "csvimp",
   "version": "0.1.0",
   "private": true,
+  "description": "Import all your data as easy as clicking a button",
+  "icons": [
+    {
+      "src": "grinder.png",
+      "type": "png"
+    }
+  ],
+  "main": "index.js",
+  "neo4jDesktop": {
+    "apiVersion": "^1.2.0",
+    "licenseRequired": false
+  },
   "dependencies": {
     "@babel/core": "7.2.2",
     "@svgr/webpack": "4.1.0",
