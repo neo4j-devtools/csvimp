@@ -1,40 +1,32 @@
 import Papa from 'papaparse'
 
-const createOrGetNode = async (driver, label, props) => {
+const createOrGetNode = (driver, label, props) => {
   const getProps = () => props.map((p, i) => `\`${p.key}\`: $prop${i}`)
   const findNode = `MATCH (n:\`${label}\` {${getProps()}}) RETURN id(n) AS id`
   const createNode = `CREATE (n:\`${label}\` {${getProps()}}) RETURN id(n) AS id`
 
-  const cypherProps = {}
-  props.forEach((p, i) => cypherProps[`prop${i}`] = p.value)
+  const cypherParams = {}
+  props.forEach((p, i) => cypherParams[`prop${i}`] = p.value)
 
-  const session1 = driver.session()
-  const id1 = await session1.readTransaction(tx => {
-    const result = tx.run(findNode, cypherProps)
-    if (result.records && result.records.length > 0) {
-      return result.records[0].get('id')
-    } else {
-      return null
-    }
+  //console.log(JSON.stringify(cypherParams))
+
+  return new Promise((resolve, reject) => {
+    let session = driver.session()
+    session.readTransaction(tx => tx.run(findNode, cypherParams))
+      .then(result => {
+        session.close()
+        if (result.records && result.records.length > 0) {
+          resolve(result.records[0].get('id'))
+        } else {
+          let session2 = driver.session()
+          session2.writeTransaction(tx => tx.run(createNode, cypherParams))
+            .then(result => {
+              session2.close()
+              resolve(result.records[0].get('id'))
+            })
+        }
+      })
   })
-  session1.close()
-
-  if (id1 !== null) {
-    return id1
-  }
-
-  const session2 = driver.session()
-  const id2 = await session2.writeTransaction(tx => {
-    const result = tx.run(createNode, cypherProps)
-    if (result.records && result.records.length > 0) {
-      return result.records[0].get('id')
-    } else {
-      return null
-    }
-  })
-  session2.close()
-
-  return id2
 }
 
 const createRelationship = (session, from, to) => {
@@ -43,12 +35,14 @@ const createRelationship = (session, from, to) => {
 
 }
 
-const onRow = (row, driver, propKeys, order, nodes) => {
+const processRow = (row, driver, propKeys, order, nodes) => {
   const getReordered = (data, i) => {
     return data[order[i]]
   }
 
-  let prevId = null
+  let promises = []
+  let prev = null
+
   nodes.forEach(node => {
     const props = []
     for (let i = node.from; i < node.to; i++) {
@@ -58,14 +52,44 @@ const onRow = (row, driver, propKeys, order, nodes) => {
       })
     }
 
-    const id = createOrGetNode(driver, getReordered(propKeys, node.from), props)
+    const current = createOrGetNode(driver, getReordered(propKeys, node.from), props)
+    promises.push(current)
 
-    if (prevId !== null) {
-      createRelationship(driver, prevId, id)
+    /*
+    if (prev !== null) {
+      const rel = Promise.all([prev, current])
+        .then(ids => createRelationship(driver, ids[0], ids[1]))
+      promises.push(rel)
     }
+    */
 
-    prevId = id
+    prev = current
   })
+
+  return Promise.all(promises)
+}
+
+const MaxJobs = 10
+const inFlight = []
+const queue = []
+const onRow = (row, driver, propKeys, order, nodes) => {
+  const checkQueue = () => {
+    if (inFlight.length < MaxJobs && queue.length > 0) {
+      const { row, driver, propKeys, order, nodes } = queue.pop()
+      const promise = processRow(row, driver, propKeys, order, nodes)
+      inFlight.push(promise)
+      promise.then(r => {
+        inFlight.splice(inFlight.findIndex(v => v === promise), 1)
+        checkQueue()
+      })
+    }
+  }
+
+  if (row.length === order.length) {
+    const newJob = {row, driver, propKeys, order, nodes}
+    queue.push(newJob)
+    checkQueue()
+  }
 }
 
 const cleanValue = val => {
@@ -112,11 +136,10 @@ export const startParsing = (file, driver, hasHeaders, order, nodes, onStep, onC
         : results.data
 
       const cleanedData = actualData.map(row => row.map(v => cleanValue(v)))
-  
       cleanedData.forEach(row => onRow(row, driver, propKeys, order, nodes))
 
       onStep({
-        data: results.data.slice(currentChunk === 0 && hasHeaders ? 1 : 0),
+//        data: results.data.slice(currentChunk === 0 && hasHeaders ? 1 : 0),
         progress: currentChunk * Papa.LocalChunkSize / file.size
       })
 
