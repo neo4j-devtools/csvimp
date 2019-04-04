@@ -68,6 +68,18 @@ const onRow = (row, driver, propKeys, order, nodes) => {
   })
 }
 
+const cleanValue = val => {
+  if (typeof val === 'string') {
+    val = val.trim()
+    let start, end
+    for (start = 0; val[start] === '"' || val[start] === ' '; start++);
+    for (end = val.length - 1; val[end] === '"' || val[end] === ' '; end--);
+    return val.substr(start, end - start + 1)  
+  } else {
+    return val
+  }
+}
+
 export const startParsing = (file, driver, hasHeaders, order, nodes, onStep, onComplete) => {
 
   // Setting chunk size so the progrssbar moves
@@ -89,7 +101,7 @@ export const startParsing = (file, driver, hasHeaders, order, nodes, onStep, onC
     chunk: (results, parser) => {
       if (currentChunk === 0) {
         if (hasHeaders) {
-          propKeys = results.data[0].slice()
+          propKeys = results.data[0].slice().map(v => cleanValue(v))
         } else {
           propKeys = results.data[0].map((_, i) => `Column ${i + 1}`)
         }
@@ -98,7 +110,10 @@ export const startParsing = (file, driver, hasHeaders, order, nodes, onStep, onC
       const actualData = currentChunk === 0 && hasHeaders
         ? results.data.slice(1)
         : results.data
-      actualData.forEach(row => onRow(row, driver, propKeys, order, nodes))
+
+      const cleanedData = actualData.map(row => row.map(v => cleanValue(v)))
+  
+      cleanedData.forEach(row => onRow(row, driver, propKeys, order, nodes))
 
       onStep({
         data: results.data.slice(currentChunk === 0 && hasHeaders ? 1 : 0),
