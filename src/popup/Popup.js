@@ -5,6 +5,8 @@ import styled from 'styled-components'
 import ProgressBar from 'react-progress-bar-battlenet-style'
 import { AwesomeButton } from 'react-awesome-button'
 import 'react-awesome-button/dist/styles.css'
+import prettyBytes from 'pretty-bytes'
+import moment from 'moment'
 
 import {
   getVisible
@@ -17,7 +19,8 @@ import {
   getNodes
 } from '../state/editor'
 import {
-  getFileName
+  getFileName,
+  getInfo as getFileInfo
 } from '../state/file'
 import {
   getConnected,
@@ -108,7 +111,7 @@ const LoadButton = styled(Button)`
 class Popup extends Component {
 
   render() {
-    const { isVisible, filename, connected, info, progress = 30, running = false } = this.props
+    const { isVisible, filename, connected, info, fileInfo, progress = 30, running = false } = this.props
 
     return isVisible 
       ? <Base>
@@ -121,7 +124,8 @@ class Popup extends Component {
                 <DBInfo connected={connected} info={info} />
 
                 <Text>{`File: ${filename}`}</Text>
-                <Text>Size: 35Mb / 500 lines</Text>
+                <Text>{`Size: ${prettyBytes(fileInfo.size)}`}</Text>
+                <Text>{`Last modified: ${moment(fileInfo.modified).format('MM/DD/YYYY')}`}</Text>
               </Stats>
 
               <ProgressBar completed={progress} />
@@ -142,7 +146,8 @@ const mapStateToProps = state => ({
   filename: getFileName(state),
   connected: getConnected(state),
   driver: getDriver(state),
-  info: getInfo(state)
+  info: getInfo(state),
+  fileInfo: getFileInfo(state)
 })
 
 const mapDispatchToProps = dispatch => ({

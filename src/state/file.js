@@ -16,6 +16,15 @@ export function getFileName (state) {
   return state[NAME].file ? state[NAME].file.name : null
 }
 
+export function getInfo (state) {
+  return state[NAME].file
+    ? {
+        size: state[NAME].file.size,
+        modified: state[NAME].file.modified
+      }
+    : null
+}
+
 export function getFile (state) {
   return state[NAME].file
 }
