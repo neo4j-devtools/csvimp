@@ -29,10 +29,18 @@ const createOrGetNode = (driver, label, props) => {
   })
 }
 
-const createRelationship = (session, from, to) => {
+const createRelationship = (driver, from, to) => {
+  const create = 'MATCH (m), (n) WHERE id(m) = $id1 AND id(n) = $id2 CREATE (n)-[:REL]->(m)'
+  const cypherParams = {
+    id1: from,
+    id2: to
+  }
 
-
-
+  let session = driver.session()
+  return session.writeTransaction(tx => tx.run(create, cypherParams))
+    .then(result => {
+      session.close()
+    })
 }
 
 const processRow = (row, driver, propKeys, order, nodes) => {
@@ -55,13 +63,11 @@ const processRow = (row, driver, propKeys, order, nodes) => {
     const current = createOrGetNode(driver, getReordered(propKeys, node.from), props)
     promises.push(current)
 
-    /*
     if (prev !== null) {
       const rel = Promise.all([prev, current])
         .then(ids => createRelationship(driver, ids[0], ids[1]))
       promises.push(rel)
     }
-    */
 
     prev = current
   })
