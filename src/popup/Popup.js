@@ -19,6 +19,13 @@ import {
 import {
   getFileName
 } from '../state/file'
+import {
+  getConnected,
+  getDriver,
+  getInfo
+} from '../state/connection'
+
+import DBInfo from './DBInfo'
 
 const Base = styled.div`
   position: absolute;
@@ -78,8 +85,7 @@ const Content = styled.div`
 
   box-shadow: 0 20px 50px 0 rgba(0,0,0,0.50);
 `
-//box-shadow: 20px 25px 75px 5px rgba(0,0,0,0.3);
-//box-shadow: 0 20px 50px 0 rgba(0,0,0,0.50);
+
 const Title = styled.span`
   font-weight: bold;
   font-size: 1.5em;
@@ -102,7 +108,7 @@ const LoadButton = styled(Button)`
 class Popup extends Component {
 
   render() {
-    const { isVisible, filename, progress = 30 } = this.props
+    const { isVisible, filename, connected, info, progress = 30, running = false } = this.props
 
     return isVisible 
       ? <Base>
@@ -112,7 +118,8 @@ class Popup extends Component {
               <Title>Load file</Title>
 
               <Stats>
-                <Text>Database: online</Text>
+                <DBInfo connected={connected} info={info} />
+
                 <Text>{`File: ${filename}`}</Text>
                 <Text>Size: 35Mb / 500 lines</Text>
               </Stats>
@@ -120,8 +127,8 @@ class Popup extends Component {
               <ProgressBar completed={progress} />
 
               <Buttons>
-                <Button disabled >Stop</Button>
-                <LoadButton type='primary' >Load</LoadButton>
+                <Button disabled={!running || !connected} >Stop</Button>
+                <LoadButton disabled={running || !connected} type='primary' >Load</LoadButton>
               </Buttons>
             </Content>
           </ContentRoot>
@@ -132,7 +139,10 @@ class Popup extends Component {
 
 const mapStateToProps = state => ({
   isVisible: getVisible(state),
-  filename: getFileName(state)
+  filename: getFileName(state),
+  connected: getConnected(state),
+  driver: getDriver(state),
+  info: getInfo(state)
 })
 
 const mapDispatchToProps = dispatch => ({

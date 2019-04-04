@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import styled from 'styled-components'
 
 import rootReducer from './state/root'
 import previewMiddleware from './state/previewmw'
+import subscribeToConnection from './connection'
 
 import Table from './table/Base'
 import Controls from './controls/Base'
@@ -23,6 +24,8 @@ const store = createStore(
   rootReducer,
   compose(applyMiddleware(previewMiddleware))
 )
+
+subscribeToConnection(store)
 
 const StyledRoot = styled.div`
   position: absolute;
@@ -50,6 +53,7 @@ const StyledLogo = styled.p`
 `
 
 class App extends Component {
+
   render() {
     return (
       <Provider store={store}>
