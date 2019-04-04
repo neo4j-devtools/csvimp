@@ -13,9 +13,6 @@ import {
 } from '../state/popup'
 import {
   getOrder,
-  reorder,
-  addNode,
-  updateNode,
   getNodes
 } from '../state/editor'
 import {
@@ -126,8 +123,8 @@ class Popup extends Component {
   }
 
   onStart = () => {
-    const { file, driver, hasHeaders } = this.props
-    startParsing(file, driver, hasHeaders, this.onStep, this.onComplete)
+    const { file, driver, hasHeaders, order, nodes } = this.props
+    startParsing(file, driver, hasHeaders, order, nodes, this.onStep, this.onComplete)
     this.setState({ running: true, progress: 0 })
   }
 
@@ -177,13 +174,18 @@ const mapStateToProps = state => ({
   info: getInfo(state),
   fileInfo: getFileInfo(state),
   file: getFile(state),
-  hasHeaders: getHeaders(state)
+  hasHeaders: getHeaders(state),
+
+  order: getOrder(state),
+  nodes: getNodes(state)
 })
 
 const mapDispatchToProps = dispatch => ({
+  /*
   reorder: (from, to) => dispatch(reorder(from, to)),
   addNode: (from, to) => dispatch(addNode(from, to)),
   updateNode: (index, data) => dispatch(updateNode(index, data))
+  */
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Popup)
