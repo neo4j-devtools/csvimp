@@ -37,10 +37,18 @@ const reloadPreview = (file, hasHeaders, dispatch, resetEditor) => {
         ]
       }
 
-      console.log('setting preview', data)
-      dispatch(setPreview(data))
+      const fixedData = data.map(row => row.map(val => {
+        val = val.trim()
+        let start, end
+        for (start = 0; val[start] === '"'; start++);
+        for (end = val.length - 1; val[end] === '"'; end--);
+        return val.substr(start, end - start + 1)
+      }))
+
+      console.log('setting preview', fixedData)
+      dispatch(setPreview(fixedData))
       if (resetEditor) {
-        dispatch(reset(data[0].length))
+        dispatch(reset(fixedData[0].length))
       }
     }
   })
