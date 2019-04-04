@@ -20,13 +20,16 @@ import {
 } from '../state/editor'
 import {
   getFileName,
-  getInfo as getFileInfo
+  getInfo as getFileInfo,
+  getFile,
+  getHeaders
 } from '../state/file'
 import {
   getConnected,
   getDriver,
   getInfo
 } from '../state/connection'
+import { startParsing } from './importer'
 
 import DBInfo from './DBInfo'
 
@@ -109,9 +112,28 @@ const LoadButton = styled(Button)`
 `
 
 class Popup extends Component {
+  state = {
+    progress: 0,
+    running: false
+  }
+
+  onStep = ({ data, progress }) => {
+    this.setState({ progress: progress * 100 })
+  }
+
+  onComplete = () => {
+    this.setState({ running: false, progress: 100 })
+  }
+
+  onStart = () => {
+    const { file, driver, hasHeaders } = this.props
+    startParsing(file, driver, hasHeaders, this.onStep, this.onComplete)
+    this.setState({ running: true, progress: 0 })
+  }
 
   render() {
-    const { isVisible, filename, connected, info, fileInfo, progress = 30, running = false } = this.props
+    const { isVisible, filename, connected, info, fileInfo } = this.props
+    const { progress, running} = this.state
 
     return isVisible 
       ? <Base>
@@ -132,7 +154,13 @@ class Popup extends Component {
 
               <Buttons>
                 <Button disabled={!running || !connected} >Stop</Button>
-                <LoadButton disabled={running || !connected} type='primary' >Load</LoadButton>
+                <LoadButton 
+                  type='primary'
+                  disabled={running || !connected}
+                  onPress={this.onStart}
+                >
+                  Load
+                </LoadButton>
               </Buttons>
             </Content>
           </ContentRoot>
@@ -147,7 +175,9 @@ const mapStateToProps = state => ({
   connected: getConnected(state),
   driver: getDriver(state),
   info: getInfo(state),
-  fileInfo: getFileInfo(state)
+  fileInfo: getFileInfo(state),
+  file: getFile(state),
+  hasHeaders: getHeaders(state)
 })
 
 const mapDispatchToProps = dispatch => ({
