@@ -5,8 +5,8 @@
   "description": "Import all your data as easy as clicking a button",
   "icons": [
     {
-      "src": "grinder.png",
-      "type": "png"
+      "src": "flame.gif",
+      "type": "gif"
     }
   ],
   "neo4jDesktop": {
