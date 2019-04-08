@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 
 import {
   getHeaders,
-  setHeaders
+  setHeaders,
+  getFile
 } from '../state/file'
 
 import LoadButton from './LoadButton'
@@ -40,7 +41,8 @@ const StyledButtonList = styled.div`
 const Base = ({
   useHeaders,
   setUseHeaders,
-  showPopup
+  showPopup,
+  file
 }) =>
   <StyledRoot>
     <StyledButtonList>
@@ -51,12 +53,13 @@ const Base = ({
       />
     </StyledButtonList>
     <LoadButton
-      onLoad={showPopup}
+      onLoad={file !== null && showPopup}
     />
   </StyledRoot>
 
 const mapStateToProps = state => ({
-  useHeaders: getHeaders(state)
+  useHeaders: getHeaders(state),
+  file: getFile(state)
 })
 
 const mapDispatchToProps = dispatch => ({

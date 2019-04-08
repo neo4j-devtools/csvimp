@@ -2,7 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import ParticleEffectButton from 'react-particle-effect-button'
 
-const Duration = 1000
+const Duration = 400
+const ResetDurarion = 150
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -16,6 +17,7 @@ const StyledWrapper = styled.div`
 class Button extends React.Component {
   state = {
     animating: false,
+    hidden: false,
     hover: false
   }
 
@@ -28,22 +30,37 @@ class Button extends React.Component {
   }
 
   onClick = () => {
-    this.setState({ animating: true })
-    setTimeout(this.props.onLoad, Duration)
+    this.setState({ animating: true, hidden: true })
+  }
+
+  onAnimationComplete = () => {
+    const { onLoad } = this.props
+    const { hidden } = this.state
+    this.setState({ animating: false })
+    hidden && setTimeout(this.reset, ResetDurarion)
+    onLoad && hidden && onLoad()
+  }
+
+  reset = () => {
+    this.setState({ animating: true, hidden: false })
   }
 
   render() {
-    const { animating, hover } = this.state
-
+    const { animating, hidden, hover } = this.state
     return (
       <ParticleEffectButton
         color='#e48624'
-        hidden={animating}
+        hidden={hidden}
         duration={Duration}
         direction='bottom'
+        onComplete={this.onAnimationComplete}
+        particlesAmountCoefficient={5}
+        oscillationCoefficient={40}
+        size={2.5}
+        speed={10}
       >
         <StyledWrapper
-          onClick={this.onClick}
+          onClick={!animating ? this.onClick : null}
           onMouseEnter={this.onEnter}
           onMouseLeave={this.onLeave}
           hover={hover}
