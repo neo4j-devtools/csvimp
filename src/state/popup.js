@@ -1,7 +1,6 @@
 export const NAME = 'popup'
 export const SHOW = NAME + '/SHOW'
-export const SET_PREVIEW = NAME + '/SET_PREVIEW'
-export const SET_HEADERS = NAME + '/SET_HEADERS'
+export const HIDE = NAME + '/HIDE'
 
 export const initialState = {
   visible: false
@@ -28,6 +27,12 @@ export default function (state = initialState, action = {}) {
         visible: true
       }
 
+    case HIDE:
+      return {
+        ...state,
+        visible: false
+      }
+
     default:
       return state
   }
@@ -39,5 +44,11 @@ export default function (state = initialState, action = {}) {
 export const showPopup = () => {
   return {
     type: SHOW
+  }
+}
+
+export const hidePopup = () => {
+  return {
+    type: HIDE
   }
 }

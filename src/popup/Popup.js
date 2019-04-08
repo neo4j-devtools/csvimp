@@ -9,7 +9,8 @@ import prettyBytes from 'pretty-bytes'
 import moment from 'moment'
 
 import {
-  getVisible
+  getVisible,
+  hidePopup
 } from '../state/popup'
 import {
   getOrder,
@@ -48,6 +49,8 @@ const ContentRoot = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  pointer-events: none;
 `
 
 const Overlay = styled.div`
@@ -87,6 +90,8 @@ const Content = styled.div`
   min-width: 50%;
 
   box-shadow: 0 20px 50px 0 rgba(0,0,0,0.50);
+
+  pointer-events: all;
 `
 
 const Title = styled.span`
@@ -128,13 +133,20 @@ class Popup extends Component {
     this.setState({ running: true, progress: 0 })
   }
 
+  onClose = () => {
+    this.props.hidePopup()
+  }
+
   render() {
     const { isVisible, filename, connected, info, fileInfo } = this.props
     const { progress, running} = this.state
 
     return isVisible 
       ? <Base>
-          <Overlay visible={isVisible} />
+          <Overlay
+            visible={isVisible}
+            onClick={!running ? this.onClose : null}
+          />
           <ContentRoot>
             <Content>
               <Title>Load file</Title>
@@ -181,11 +193,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  /*
-  reorder: (from, to) => dispatch(reorder(from, to)),
-  addNode: (from, to) => dispatch(addNode(from, to)),
-  updateNode: (index, data) => dispatch(updateNode(index, data))
-  */
+  hidePopup: () => dispatch(hidePopup())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Popup)
